@@ -25,4 +25,8 @@ def time_normalize(
 
 
 def interpolate_missing_data(array: xr.DataArray) -> xr.DataArray:
-    return array.interpolate_na(dim="time", method="linear")
+    # Fill the missing data using linear interpolation
+    interpolated_array = array.interpolate_na(dim="time", method="linear")
+    # If there are NaNs at the start or end of the trial, replace with zeros
+    interpolated_array = interpolated_array.fillna(0.0)
+    return interpolated_array
