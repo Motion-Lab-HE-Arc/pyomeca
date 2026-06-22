@@ -49,6 +49,16 @@ def read_c3d(
     data_by_frame = 1 if group == "POINT" else reader.header().nbAnalogByFrame()
 
     attrs = attrs if attrs else {}
+
+    if data_by_frame == 0:
+        empty_time = np.array([], dtype=float)
+        return caller(
+            data[0, ...] if group == "ANALOG" else data,
+            channels,
+            time=empty_time,
+            attrs=attrs,
+        )
+
     attrs["first_frame"] = reader.header().firstFrame() * data_by_frame
     attrs["last_frame"] = reader.header().lastFrame() * data_by_frame
     attrs["rate"] = reader.header().frameRate() * data_by_frame
